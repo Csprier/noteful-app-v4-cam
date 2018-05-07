@@ -6,10 +6,18 @@ const mongoose = require('mongoose');
 
 const { PORT, MONGODB_URI } = require('./config');
 
+// Routers ========
 const notesRouter = require('./routes/notes');
 const foldersRouter = require('./routes/folders');
 const tagsRouter = require('./routes/tags');
 const usersRouter = require('./routes/users');
+
+// Authentication ========
+const passport = require('passport');
+const authRouter = require('./routes/auth');
+const localStrategy = require('./passport/local');
+// Configure Passport to utilize the strategy
+passport.use(localStrategy);
 
 // Create an Express application
 const app = express();
@@ -30,6 +38,7 @@ app.use('/api/notes', notesRouter);
 app.use('/api/folders', foldersRouter);
 app.use('/api/tags', tagsRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/login', authRouter);
 
 // Catch-all 404
 app.use(function (req, res, next) {
